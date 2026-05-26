@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>BrainHealth Chronotype Assessment | Morningness-Eveningness Questionnaire</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f4f7fc;  /* soft neutral background */
+            font-family: 'Museo Sans', 'Arial', sans-serif;
+            color: #13141E;
+            line-height: 1.5;
+            padding: 2rem 1rem;
+        }
+
+        /* system fallback */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+
+        /* simulate Museo Sans / Arial fallback */
+        body, button, input, select, textarea {
+            font-family: 'Museo Sans', 'Arial', 'Inter', sans-serif;
+        }
+
+        /* container */
+        .assessment-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        /* ===== BRAND HEADER ===== */
+        .brand-header {
+            background: #00BFF3;
+            padding: 2rem 2rem 1rem 2rem;
+            border-bottom: 1px solid #e6edf2;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .logo-icon {
+            height: 60px;
+            width: auto;
+        }
+
+        .brand-signature-text {
+            line-height: 1.2;
+        }
+
+        .brand-signature-text .center {
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 0.5px;
+            color: #00BFF3;
+        }
+
+        .brand-signature-text .center span {
+            font-weight: 300;
+            color: #13141E;
+        }
+
+        .brand-signature-text .university {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: #5a6874;
+            letter-spacing: 0.3px;
+        }
+
+        .badge {
+            background: #EFF3F6;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #04637a;
+        }
+
+    /* ===== INSTRUCTION BLURB ===== */
+        .instruction-blurb {
+            background: #F0F7FA;
+            border-left: 4px solid #00BFF3;
+            padding: 1rem 1.5rem;
+            margin: 1rem 2rem 0 2rem;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            color: #1e4a62;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: baseline;
+        }
+        .instruction-title {
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            color: #04637a;
+        }
+        .instruction-text {
+            flex: 1;
+        }
+        .instruction-text p {
+            margin-bottom: 0.25rem;
+        }
+
+
+        /* ===== PROGRESS & SCORE ===== */
+        .score-panel {
+            background: #f9fbfd;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .score-box {
+            background: white;
+            border-radius: 32px;
+            padding: 0.4rem 1.2rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border: 1px solid #dce5ec;
+        }
+
+        .score-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: #2c6e8f;
+        }
+
+        .score-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00BFF3;
+            line-height: 1;
+        }
+
+        .chronotype-tag {
+            font-weight: 600;
+            background: #00BFF310;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            color: #04637a;
+        }
+
+        /* questions */
+        .questions-section {
+            padding: 1.5rem 2rem 2.5rem;
+        }
+
+        .question-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03), 0 1px 2px rgba(0,0,0,0.05);
+            border: 1px solid #eef2f6;
+            transition: all 0.2s;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
+            color: #13141E;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .radio-option, .scale-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .radio-option label, .scale-option label {
+            font-weight: 400;
+            color: #2c3e47;
+            cursor: pointer;
+        }
+
+        input[type="radio"] {
+            accent-color: #00BFF3;
+            width: 1.1rem;
+            height: 1.1rem;
+            margin-right: 0.2rem;
+        }
+
+        hr {
+            margin: 0.5rem 0;
+            border-color: #edf2f7;
+        }
+
+        .scale-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-size: 0.75rem;
+            color: #5f7f8c;
+            margin-top: 0.25rem;
+        }
+
+        select, input[type="range"] {
+            font-family: inherit;
+        }
+
+        .custom-scale {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn-submit {
+            background: #00BFF3;
+            border: none;
+            padding: 0.9rem 2rem;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            max-width: 280px;
+            margin-top: 1rem;
+            box-shadow: 0 2px 8px rgba(0,191,243,0.3);
+        }
+
+        .btn-submit:hover {
+            background: #009ac4;
+            transform: translateY(-1px);
+        }
+
+        .result-area {
+            margin-top: 2rem;
+            background: #EFF8FC;
+            border-radius: 24px;
+            padding: 1.5rem;
+            border-left: 6px solid #00BFF3;
+        }
+
+        .result-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            background: #f8fafc;
+            padding: 1.2rem 2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #5f7f8c;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        @media (max-width: 680px) {
+            .questions-section {
+                padding: 1rem;
+            }
+            .question-card {
+                padding: 1rem;
+            }
+            .brand-header {
+                flex-direction: column;
+                align-items: start;
+            }
+        }
+
+        /* style for inline number scales (q1,q2,q10,q17,q18) */
+        .time-scale {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 0.5rem;
+        }
+        .time-option {
+            background: #f1f5f9;
+            padding: 0.4rem 0.9rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.1s;
+            border: 1px solid transparent;
+        }
+        .time-option.selected {
+            background: #00BFF3;
+            color: white;
+            border-color: #00BFF3;
+            font-weight: 500;
+        }
+        .hidden-radio {
+            display: none;
+        }
+
+        .inline-score {
+            font-size: 0.7rem;
+            color: #04637a;
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="assessment-container">
+    <!-- Header with logo (simulated using embedded SVG of BrainHealth style based on brand) -->
+    <div class="brand-header">
+        <div class="logo-area">
+            <!-- Logo representation (icon + logotype) based on Center for BrainHealth brand guidelines - Deepseek tried to draw a logo -->
+            <!-- <svg class="logo-icon" width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="46" fill="#00BFF3" stroke="white" stroke-width="2"/>
+                <path d="M35 50 L45 65 L65 35 L55 30 L45 50 L35 35 Z" fill="white" />
+                <circle cx="50" cy="50" r="8" fill="white"/>
+                <path d="M50 30 L50 20 M50 80 L50 70 M30 50 L20 50 M80 50 L70 50" stroke="white" stroke-width="4" stroke-linecap="round"/>
+            </svg> -->
+<a href="https://www.example.com">
+  <img src="CBHLogoForBHBlueBg_WEB.png" width="300" alt="Description of image">
+</a>
+         
+        </div>
+        <div class="badge">Morningness - Eveningness Questionnaire; <i>Horne & Osteburg (1976)</i></div>
+    </div>
+
+ <!-- SUCCINCT INSTRUCTION BLURB (based on original 7 points, reworded concisely) -->
+    <div class="instruction-blurb">
+        <div class="instruction-title">📋 How to complete:</div>
+        <div class="instruction-text">
+            <p>✅ Read each question carefully. Answer <strong>all</strong> items in order, one selection per question (use the scale where provided).</p>
+            <p>✅ Be honest & independent — don't go back or change previous answers. Your responses are strictly confidential.</p>
+            <p class="instruction-note">💬 Optional comments? Feel free to add notes below any question (space provided).</p>
+        </div>
+    </div>
+    
+    <div class="score-panel" id="scorePanel">
+        <div class="score-box">
+            <div class="score-label">total score</div>
+            <div class="score-value" id="totalScoreDisplay">—</div>
+        </div>
+        <div class="chronotype-tag" id="chronotypeTag">Answer all questions in numerical order.</div>
+        <div style="font-size:0.7rem;">* Based on validated Morningness-Eveningness Questionnaire</div>
+    </div>
+
+    <form id="meqForm">
+        <div class="questions-section" id="questionsContainer">
+            <!-- dynamic questions will be injected here -->
+        </div>
+        <div style="padding: 0 2rem 2rem 2rem; text-align: center;">
+            <button type="button" id="calculateBtn" class="btn-submit">See my chronotype →</button>
+        </div>
+    </form>
+    <div id="resultArea" class="result-area" style="margin: 0 2rem 2rem 2rem; display: none;">
+        <div class="result-title" id="resultTitle"></div>
+        <div id="resultDescription"></div>
+    </div>
+    <footer>
+        © Center for BrainHealth | Brand Guidelines applied. This tool reflects the Morningness-Eveningness Questionnaire for research & self-awareness.
+    </footer>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // MEQ questions definition (19 items, scoring as per PDF)
+    // For each question we store: text, type (radio/scale/timescale), options array, scores mapping
+    // --------------------------------------------------------------
+    const questionsData = [
+        { id: 1, text: "Considering only your own 'feeling best' rhythm, at what time would you get up if you were entirely free to plan your day?", type: "timeScale", options: ["05:00-06:30", "06:30-07:45", "07:45-09:45", "09:45-11:00", "11:00-12:00"], scores: [5,4,3,2,1] },
+        { id: 2, text: "Considering only your own 'feeling best' rhythm, at what time would you go to bed if you were entirely free to plan your evening?", type: "timeScale", options: ["20:00-21:00", "21:00-22:15", "22:15-00:30", "00:30-02:45", "02:45-03:00"], scores: [5,4,3,2,1] },
+        { id: 3, text: "If there is a specific time at which you have to get up in the morning, to what extent are you dependent on being woken up by an alarm clock?", type: "radio", options: ["Not at all dependent", "Slightly dependent", "Fairly dependent", "Very dependent"], scores: [4,3,2,1] },
+        { id: 4, text: "Assuming adequate environmental conditions, how easy is it do you find getting up in the mornings?", type: "radio", options: ["Not at all easy", "Not very easy", "Fairly easy", "Very easy"], scores: [1,2,3,4] },
+        { id: 5, text: "How alert do you feel during the first half hour after having woken in the mornings?", type: "radio", options: ["Not at all alert", "Slightly alert", "Fairly alert", "Very alert"], scores: [1,2,3,4] },
+        { id: 6, text: "How is your appetite during the first half-hour after having woken in the mornings?", type: "radio", options: ["Very poor", "Fairly poor", "Fairly good", "Very good"], scores: [1,2,3,4] },
+        { id: 7, text: "During the first half-hour after having woken in the morning how tired do you feel?", type: "radio", options: ["Very tired", "Fairly tired", "Fairly refreshed", "Very refreshed"], scores: [1,2,3,4] },
+        { id: 8, text: "When you have no commitments the next day, at what time do you go to bed compared to your usual bedtime?", type: "radio", options: ["Seldom or never later", "Less than one hour later", "1-2 hours later", "More than two hours later"], scores: [4,3,2,1] },
+        { id: 9, text: "You have decided to engage in some physical exercise. A friend suggests that you do this one hour twice a week and the best time for him is between 7.0-8.0 AM. Bearing in mind nothing else but your own 'feeling best' rhythm How do you think you would perform?", type: "radio", options: ["Would be on good form", "Would be on reasonable form", "Would find it difficult", "Would find it very difficult"], scores: [4,3,2,1] },
+        { id: 10, text: "At what time in the evening do you feel tired and as a result in need of sleep?", type: "timeScale", options: ["20:00-21:00", "21:00-22:15", "22:15-00:45", "00:45-02:00", "02:00-03:00"], scores: [5,4,3,2,1] },
+        { id: 11, text: "You wish to be at your peak performance for a test which you know is going to be mentally exhausting and lasting for two hours. You are entirely free to plan your day and considering only your 'feel best' rhythm which ONE of the four testing times would you choose?", type: "radio", options: ["08:00 - 10:00", "11:00 - 13:00", "15:00 - 17:00", "19:00 - 21:00"], scores: [6,4,2,0] },
+        { id: 12, text: "If you went to bed at 23:00 at what level of tiredness would you be?", type: "radio", options: ["Not at all tired", "A little tired", "Fairly tired", "Very tired"], scores: [0,2,3,5] },
+        { id: 13, text: "For some reason you have gone to bed several hours later than usual, but there is no need to get up at any particular time the next morning. Which ONE of the following events are you most likely to experience?", type: "radio", options: ["Will wake up at usual time and will NOT fall asleep", "Will wake up at usual time and will dose thereafter", "Will wake up at usual time but will fall asleep again", "Will NOT wake up until later than usual"], scores: [4,3,2,1] },
+        { id: 14, text: "One night you have to remain awake between 04:00 - 06:00 in order to carry out a night watch. You have no commitments the next day. Which ONE of the following alternatives will suit you best?", type: "radio", options: ["Would NOT go to bed until watch was over", "Would take a nap before and sleep after", "Would take a good sleep before and nap after", "Would take ALL sleep before watch"], scores: [1,2,3,4] },
+        { id: 15, text: "You have to do two hours of hard physical work. You are entirely free to plan your day and considering only your own 'feeling best' rhythm which ONE of the following times would you choose?", type: "radio", options: ["08:00 - 10:00", "11:00 - 13:00", "15:00 - 17:00", "19:00 - 21:00"], scores: [4,3,2,1] },
+        { id: 16, text: "You have decided to engage in hard physical exercise. A friend suggests that you do this for one hour twice a week and the best time for him is between 22:00 - 23:00. Bearing in mind nothing else but your own 'feeling best' rhythm how well do you think you would perform?", type: "radio", options: ["Would be on good form", "Would be on reasonable form", "Would find it difficult", "Would find it very difficult"], scores: [1,2,3,4] },
+        { id: 17, text: "Suppose that you can choose your own work hours. Assume that you worked a FIVE hour day (including breaks) and that your job was interesting and paid by results. Which FIVE CONSECUTIVE HOURS would you select? (Select the start hour range)", type: "timeScale", options: ["00:00-03:00 (midnight start)", "04:00-07:00", "08:00-08:00 (8am-1pm)", "09:00-13:00", "14:00-16:00", "17:00-0:00"], scores: [1,5,4,3,2,1] },
+        { id: 18, text: "At what point of the day do you think that you reach your 'feeling best' peak?", type: "timeScale", options: ["00:00-04:00", "05:00-07:00", "08:00-09:00", "10:00-16:00", "17:00-21:00", "22:00-00:00"], scores: [1,5,4,3,2,1] },
+        { id: 19, text: "One hears about 'morning' and 'evening' types of people. Which ONE of these types do you consider yourself to be?", type: "radio", options: ["Definitely a 'morning' type", "Rather more a 'morning' than an 'evening' type", "Rather more an 'evening' than a 'morning' type", "Definitely an 'evening' type"], scores: [6,4,2,0] }  
+    ];
+
+    // Helper: render each question
+    let selectedAnswers = new Array(19).fill(null); // store score for each question
+
+    function renderQuestions() {
+        const container = document.getElementById('questionsContainer');
+        container.innerHTML = '';
+        questionsData.forEach((q, idx) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.dataset.qid = q.id;
+            const qNumber = q.id;
+            const questionHtml = `<div class="question-text">${qNumber}. ${q.text}</div><div class="options" id="options-${qNumber}"></div>`;
+            card.innerHTML = questionHtml;
+            const optionsDiv = card.querySelector(`.options`);
+            
+            if (q.type === 'radio') {
+                q.options.forEach((opt, optIdx) => {
+                    const radioId = `q${qNumber}_opt${optIdx}`;
+                    const scoreVal = q.scores[optIdx];
+                    const optionWrap = document.createElement('div');
+                    optionWrap.className = 'radio-option';
+                    optionWrap.innerHTML = `
+                        <input type="radio" name="q${qNumber}" value="${scoreVal}" id="${radioId}">
+                        <label for="${radioId}">${opt} <span class="inline-score">(${scoreVal})</span></label>
+                    `;
+                    optionsDiv.appendChild(optionWrap);
+                    const radio = optionWrap.querySelector('input');
+                    radio.addEventListener('change', () => {
+                        selectedAnswers[idx] = parseInt(radio.value);
+                        updateLiveScore();
+                    });
+                    if (selectedAnswers[idx] !== null && parseInt(selectedAnswers[idx]) === scoreVal) {
+                        radio.checked = true;
+                    }
+                });
+            } 
+            else if (q.type === 'timeScale') {
+                // custom selectable buttons
+                const scaleContainer = document.createElement('div');
+                scaleContainer.className = 'time-scale';
+                q.options.forEach((opt, optIdx) => {
+                    const scoreVal = q.scores[optIdx];
+                    const btn = document.createElement('div');
+                    btn.className = 'time-option';
+                    btn.textContent = opt;
+                    btn.dataset.score = scoreVal;
+                    btn.dataset.optIdx = optIdx;
+                    btn.addEventListener('click', () => {
+                        // remove selected class from siblings
+                        Array.from(scaleContainer.children).forEach(child => child.classList.remove('selected'));
+                        btn.classList.add('selected');
+                        selectedAnswers[idx] = scoreVal;
+                        updateLiveScore();
+                    });
+                    if (selectedAnswers[idx] === scoreVal) btn.classList.add('selected');
+                    scaleContainer.appendChild(btn);
+                });
+                optionsDiv.appendChild(scaleContainer);
+            }
+            container.appendChild(card);
+        });
+    }
+
+    function updateLiveScore() {
+        let total = 0;
+        let allAnswered = true;
+        for (let i = 0; i < selectedAnswers.length; i++) {
+            if (selectedAnswers[i] === null || selectedAnswers[i] === undefined) {
+                allAnswered = false;
+                continue;
+            }
+            total += selectedAnswers[i];
+        }
+        document.getElementById('totalScoreDisplay').innerText = allAnswered ? total : '—';
+        if (allAnswered) {
+            let chronotype = getChronotypeText(total);
+            document.getElementById('chronotypeTag').innerHTML = chronotype;
+            // show result inline optionally but we also have button, but live can preview
+            const resultDiv = document.getElementById('resultArea');
+            if (resultDiv) {
+                resultDiv.style.display = 'block';
+                document.getElementById('resultTitle').innerHTML = `Your Chronotype: ${chronotype}`;
+                document.getElementById('resultDescription').innerHTML = getDescriptionByScore(total);
+            }
+        } else {
+            document.getElementById('chronotypeTag').innerHTML = 'Incomplete — answer all 19 items';
+            const resultDiv = document.getElementById('resultArea');
+            if (resultDiv && !allAnswered) resultDiv.style.display = 'none';
+        }
+        if (allAnswered && total >= 16 && total <= 86) {
+            // fine
+        }
+    }
+
+    function getChronotypeText(score) {
+        if (score >= 70 && score <= 86) return "Definitely Morning Type 🌞";
+        if (score >= 59 && score <= 69) return "Moderately Morning Type ☀️";
+        if (score >= 42 && score <= 58) return "Neither Type ⚖️";
+        if (score >= 31 && score <= 41) return "Moderately Evening Type 🌙";
+        if (score >= 16 && score <= 30) return "Definitely Evening Type 🌜";
+        return "Invalid score";
+    }
+
+    function getDescriptionByScore(score) {
+        if (score >= 70) return "You are strongly morning-oriented, peak early, feel energetic in the AM. Align important tasks with mornings.";
+        if (score >= 59) return "You lean morning, perform best before noon. Protect early hours for deep focus.";
+        if (score >= 42) return "Neutral chronotype – flexible; can adapt to both morning and evening schedules with moderate ease.";
+        if (score >= 31) return "You lean evening; alertness improves later in day. Schedule demanding tasks in afternoon/evening.";
+        return "Definite evening type: peak performance in late afternoon to night. Avoid early obligations when possible.";
+    }
+
+    function computeAndDisplay() {
+        let total = 0;
+        let complete = true;
+        for (let i = 0; i < selectedAnswers.length; i++) {
+            if (selectedAnswers[i] === null) {
+                complete = false;
+                break;
+            }
+            total += selectedAnswers[i];
+        }
+        if (!complete) {
+            alert("Please answer all 19 questions before viewing your full chronotype result.");
+            return;
+        }
+        const chrono = getChronotypeText(total);
+        document.getElementById('totalScoreDisplay').innerText = total;
+        document.getElementById('chronotypeTag').innerHTML = chrono;
+        const resultDiv = document.getElementById('resultArea');
+        resultDiv.style.display = 'block';
+        document.getElementById('resultTitle').innerHTML = `🧠 Your Morningness-Eveningness Score: ${total} · ${chrono}`;
+        document.getElementById('resultDescription').innerHTML = getDescriptionByScore(total) + `<br><br><strong>Interpretation:</strong> Scores from MEQ range 16-86. ${chrono}. ${getAdditionalInsight(total)}`;
+        // scroll smoothly
+        resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function getAdditionalInsight(score) {
+        if(score>=70) return "Consider scheduling cognitively demanding work before noon.";
+        if(score>=59) return "Your moderate morningness suggests consistent rise times enhance performance.";
+        if(score>=42) return "You can shift routines; maintain regular sleep hygiene.";
+        if(score>=31) return "Try to avoid early meetings; use evening for creative work.";
+        return "Evening types benefit from later start times and bright light exposure in morning to regulate rhythm.";
+    }
+
+    function loadStoredAnswers() {
+        // no persistent localstorage needed but we keep in memory
+        for(let i=0;i<selectedAnswers.length;i++) selectedAnswers[i]=null;
+    }
+
+    // manual reset check initial render, attach main button
+    document.addEventListener('DOMContentLoaded', () => {
+        renderQuestions();
+        const calcBtn = document.getElementById('calculateBtn');
+        if (calcBtn) {
+            calcBtn.addEventListener('click', computeAndDisplay);
+        }
+        // revalidate if any dynamic initial? 
+        // when questions loaded, we need to watch for preselect none, but fine.
+        // additional brand styling: add subtle pattern from guidelines
+        const container = document.querySelector('.assessment-container');
+        if(container) {
+            // optional pattern background subtle (light pattern using brand pattern)
+        }
+        // Add note for brand compliance: consistent with 'BrainHealth Blue' accents
+        const style = document.createElement('style');
+        style.textContent = ` .btn-submit { background: #00BFF3; } .time-option.selected { background: #00BFF3; } .score-value { color: #00BFF3; } .result-area { border-left-color: #00BFF3; } `;
+        document.head.appendChild(style);
+    });
+</script>
+</body>
+</html>
